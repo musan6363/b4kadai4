@@ -6,6 +6,31 @@ class Item:
 
 
 class DoublyLinkedList:
+    """
+    >>> dll1 = DoublyLinkedList()
+    >>> dll1.insert(5)
+    >>> dll1.insert(2)
+    >>> dll1.insert(3)
+    >>> dll1.insert(1)
+    >>> dll1.delete(3)
+    >>> dll1.insert(6)
+    >>> dll1.delete(5)
+    >>> dll1.show()
+    6 1 2
+    >>> dll2 = DoublyLinkedList()
+    >>> dll2.insert(5)
+    >>> dll2.insert(2)
+    >>> dll2.insert(3)
+    >>> dll2.insert(1)
+    >>> dll2.delete(3)
+    >>> dll2.insert(6)
+    >>> dll2.delete(5)
+    >>> dll2.deleteFirst()
+    >>> dll2.deleteLast()
+    >>> dll2.show()
+    1
+    """
+
     def __init__(self):
         self.head = Item("HEAD")
         self.tail = Item("TAIL")
@@ -44,20 +69,12 @@ class DoublyLinkedList:
         tmp = self.head.next
         result = ""
         while tmp is not self.tail:
-            result = result + " " + tmp.x
+            result = result + " " + str(tmp.x)
             tmp = tmp.next
         result = result[1:]
         print(result)
 
 
 if __name__ == "__main__":
-    dll = DoublyLinkedList()
-    with open("./sample1.txt") as f:
-        sample = f.readlines()
-        for line in sample[1:]:
-            tmp = line.split()
-            if len(tmp) == 2:
-                eval("dll."+tmp[0])(tmp[1])
-            else:
-                eval("dll."+tmp[0])()
-    dll.show()
+    import doctest
+    doctest.testmod()
