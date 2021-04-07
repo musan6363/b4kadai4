@@ -133,6 +133,24 @@ def bubble_sort(data):
         print(count)
 
 
+def selection_sort(data):
+    print("selection sort")
+    if type(data) is dll.DoublyLinkedList:
+        unsorted_top = data.head.next
+        unsorted_position = 0
+        while unsorted_top is not data.tail:
+            min = unsorted_top
+            target = unsorted_top.next
+            while target is not data.tail:
+                if target.x < min.x:
+                    min = target
+                target = target.next
+            # minとunsorted_topの交換
+
+    else:
+        pass
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
