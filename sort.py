@@ -1,6 +1,22 @@
 import DoublyLinkedList as dll
 
 
+def swap(a, b):
+    # - a - x - x - x - b - を - b - x - x - x - a - につなぎ替える
+    # 8つの情報を更新する．
+    tmp_a_prev = a.prev
+    tmp_a_next = a.next
+    a.prev.next = b
+    a.next.prev = b
+    a.prev = b.prev
+    a.next = b.next
+    b.prev.next = a
+    b.next.prev = a
+    b.prev = tmp_a_prev
+    b.next = tmp_a_next
+    return b.prev, b, b.next, a.prev, a, a.next
+
+
 def insertion_sort(data):
     """
     >>> data1 = dll.DoublyLinkedList()
@@ -37,14 +53,20 @@ def insertion_sort(data):
             while sorted is not data.head and sorted.x > target.x:
                 sorted = sorted.prev
             # ここから 挿入処理
-            tmp = target.next
-            target.prev.next = target.next
-            target.next.prev = target.prev
-            target.next = sorted.next
-            target.prev = sorted
-            sorted.next.prev = target
-            sorted.next = target
-            target = tmp
+            # tmp = target.next
+            # target.prev.next = target.next
+            # target.next.prev = target.prev
+            # target.next = sorted.next
+            # target.prev = sorted
+            # sorted.next.prev = target
+            # sorted.next = target
+            # target = tmp
+            (
+                sorted, sorted.next, sorted.next.next,
+                target.prev, target, target.next
+            ) = swap(
+                sorted.next, target
+            )
             # ここまで 挿入処理
             data.show()
     else:
@@ -90,14 +112,20 @@ def bubble_sort(data):
             while target is not unsorted_top:
                 if target.x < target.prev.x:
                     # ここから 入替処理
-                    tmp_prev = target.prev.prev
-                    tmp_next = target.prev
-                    target.prev.prev.next = target
-                    target.prev.prev = target
-                    target.prev.next = target.next
-                    target.next.prev = target.prev
-                    target.prev = tmp_prev
-                    target.next = tmp_next
+                    # tmp_prev = target.prev.prev
+                    # tmp_next = target.prev
+                    # target.prev.prev.next = target
+                    # target.prev.prev = target
+                    # target.prev.next = target.next
+                    # target.next.prev = target.prev
+                    # target.prev = tmp_prev
+                    # target.next = tmp_next
+                    (
+                        target.prev.prev, target.prev, target,
+                        target.prev, target, target.next
+                    ) = swap(
+                        target.prev, target
+                    )
                     # ここまで 入替処理
                     flag = True
                     count += 1
