@@ -75,6 +75,65 @@ class DoublyLinkedList:
         print(result)
 
 
+class DoubleDataDoublyLinkedList(DoublyLinkedList):
+    """
+    >>> dll3 = DoubleDataDoublyLinkedList()
+    >>> dll3.insert("H4")
+    >>> dll3.insert("C9")
+    >>> dll3.insert("S4")
+    >>> dll3.insert("D2")
+    >>> dll3.insert("C3")
+    >>> dll3.show()
+    C3 D2 S4 C9 H4
+    >>> dll4 = DoubleDataDoublyLinkedList()
+    >>> dll4.insert("H4")
+    >>> dll4.insert("C9")
+    >>> dll4.insert("S4")
+    >>> dll4.insert("D2")
+    >>> dll4.insert("C3")
+    >>> dll4.delete("D2")
+    >>> dll4.delete("S4")
+    >>> dll4.deleteFirst()
+    >>> dll4.deleteLast()
+    >>> dll4.show()
+    C9
+    """
+
+    def insert(self, x):
+        picture = x[0]
+        value = int(x[1])
+        super(DoubleDataDoublyLinkedList, self).insert(value)
+        self.head.next.picture = picture
+
+    def delete(self, x):
+        picture = x[0]
+        value = int(x[1])
+        tmp = self.head.next
+        while tmp is not self.tail:
+            if tmp.x == value and tmp.picture == picture:
+                tmp.prev.next = tmp.next
+                tmp.next.prev = tmp.prev
+                return
+            tmp = tmp.next
+
+    def show(self):
+        tmp = self.head.next
+        result = ""
+        while tmp is not self.tail:
+            result = result + " " + tmp.picture + str(tmp.x)
+            tmp = tmp.next
+        result = result[1:]
+        print(result)
+
+    def copy(self):
+        dll_copy = DoubleDataDoublyLinkedList()
+        original = self.head.next
+        while original is not self.tail:
+            dll_copy.insert(original.picture + str(original.x))
+            original = original.next
+        return dll_copy
+
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

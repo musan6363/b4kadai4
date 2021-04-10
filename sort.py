@@ -29,7 +29,18 @@ def insertion_sort(data):
     [1, 2, 3, 4, 5, 6]
     """
     print("insertion sort")
-    if type(data) is dll.DoublyLinkedList:
+    if type(data) is list:
+        print(data)
+        for i in range(1, len(data)):
+            target = data[i]
+            j = i - 1
+            while j >= 0 and data[j] > target:
+                data[j+1] = data[j]
+                j -= 1
+            data[j+1] = target
+            print(data)
+
+    else:
         data.show()
         target = data.head.next.next
         while target is not data.tail:
@@ -47,16 +58,6 @@ def insertion_sort(data):
             # ここまで 挿入処理
             target = new_target
             data.show()
-    else:
-        print(data)
-        for i in range(1, len(data)):
-            target = data[i]
-            j = i - 1
-            while j >= 0 and data[j] > target:
-                data[j+1] = data[j]
-                j -= 1
-            data[j+1] = target
-            print(data)
 
 
 def bubble_sort(data):
@@ -67,18 +68,41 @@ def bubble_sort(data):
     >>> data1.insert(2)
     >>> data1.insert(3)
     >>> data1.insert(5)
-    >>> bubble_sort(data1)
+    >>> count = bubble_sort(data1)
     bubble sort
+    >>> data1.show()
     1 2 3 4 5
+    >>> print(count)
     8
     >>> data2 = [5,2,4,6,1,3]
-    >>> bubble_sort(data2)
+    >>> count = bubble_sort(data2)
     bubble sort
+    >>> print(data2)
     [1, 2, 3, 4, 5, 6]
+    >>> print(count)
     9
     """
     print("bubble sort")
-    if type(data) is dll.DoublyLinkedList:
+    if type(data) is list:
+        count = 0
+        flag = True
+        i = 1
+        while flag:
+            flag = False
+            for j in range(len(data)-i):
+                j = len(data) - j - 1  # N-1 ~ i+1
+                if (
+                    type(data[j]) is str and data[j][1] < data[j-1][1]
+                ) or (
+                    type(data[j]) is int and data[j] < data[j-1]
+                ):
+                    tmp = data[j]
+                    data[j] = data[j-1]
+                    data[j-1] = tmp
+                    flag = True
+                    count += 1
+            i += 1
+    else:
         count = 0
         flag = True
         unsorted_top = data.head.next
@@ -104,25 +128,7 @@ def bubble_sort(data):
                 else:
                     target = target.prev
             unsorted_top = unsorted_top.next
-        data.show()
-        print(count)
-    else:
-        count = 0
-        flag = True
-        i = 1
-        while flag:
-            flag = False
-            for j in range(len(data)-i):
-                j = len(data) - j - 1  # N-1 ~ i+1
-                if data[j] < data[j-1]:
-                    tmp = data[j]
-                    data[j] = data[j-1]
-                    data[j-1] = tmp
-                    flag = True
-                    count += 1
-            i += 1
-        print(data)
-        print(count)
+    return count
 
 
 def selection_sort(data):
@@ -134,18 +140,40 @@ def selection_sort(data):
     >>> data1.insert(4)
     >>> data1.insert(6)
     >>> data1.insert(5)
-    >>> selection_sort(data1)
+    >>> count = selection_sort(data1)
     selection sort
+    >>> data1.show()
     1 2 3 4 5 6
+    >>> print(count)
     4
     >>> data2 = [5,6,4,2,1,3]
-    >>> selection_sort(data2)
+    >>> count = selection_sort(data2)
     selection sort
+    >>> print(data2)
     [1, 2, 3, 4, 5, 6]
+    >>> print(count)
     4
     """
     print("selection sort")
-    if type(data) is dll.DoublyLinkedList:
+    if type(data) is list:
+        count = 0
+        for i in range(len(data)):
+            count_flag = False
+            minj = i
+            for j in range(i, len(data)):
+                if (
+                    type(data[j]) is str and data[j][1] < data[minj][1]
+                ) or (
+                    type(data[j]) is int and data[j] < data[minj]
+                ):
+                    minj = j
+                    count_flag = True
+            tmp = data[i]
+            data[i] = data[minj]
+            data[minj] = tmp
+            if count_flag:
+                count += 1
+    else:
         count = 0
         unsorted_top = data.head.next
         while unsorted_top is not data.tail:
@@ -176,24 +204,65 @@ def selection_sort(data):
             unsorted_top = min.next
             if count_flag:
                 count += 1
+    return count
+
+
+def stable_sort(data):
+    """
+    >>> data1 = dll.DoubleDataDoublyLinkedList()
+    >>> data1.insert("C3")
+    >>> data1.insert("D2")
+    >>> data1.insert("S4")
+    >>> data1.insert("C9")
+    >>> data1.insert("H4")
+    >>> stable_sort(data1)
+    stable sort
+    bubble sort
+    D2 C3 H4 S4 C9
+    Stable
+    selection sort
+    D2 C3 S4 H4 C9
+    Not stable
+    >>> data2 = dll.DoubleDataDoublyLinkedList()
+    >>> data2.insert("H1")
+    >>> data2.insert("S1")
+    >>> stable_sort(data2)
+    stable sort
+    bubble sort
+    S1 H1
+    Stable
+    selection sort
+    S1 H1
+    Stable
+    >>> data3 = ['H4', 'C9', 'S4', 'D2', 'C3']
+    >>> stable_sort(data3)
+    stable sort
+    bubble sort
+    ['D2', 'C3', 'H4', 'S4', 'C9']
+    Stable
+    selection sort
+    ['D2', 'C3', 'S4', 'H4', 'C9']
+    Not Stable
+    """
+    print("stable sort")
+    bubble = data.copy()
+    bubble_sort(bubble)
+    if type(bubble) is dll.DoubleDataDoublyLinkedList:
         data.show()
-        print(count)
+        bubble.show()
     else:
-        count = 0
-        for i in range(len(data)):
-            count_flag = False
-            minj = i
-            for j in range(i, len(data)):
-                if data[j] < data[minj]:
-                    minj = j
-                    count_flag = True
-            tmp = data[i]
-            data[i] = data[minj]
-            data[minj] = tmp
-            if count_flag:
-                count += 1
-        print(data)
-        print(count)
+        print(bubble)
+    print("Stable")  # Bubble sort is always stable
+    selection = data.copy()
+    selection_sort(selection)
+    if type(selection) is dll.DoubleDataDoublyLinkedList:
+        selection.show()
+    else:
+        print(selection)
+    if bubble == selection:
+        print("Stable")
+    else:
+        print("Not Stable")
 
 
 if __name__ == "__main__":
