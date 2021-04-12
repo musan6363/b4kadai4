@@ -1,7 +1,7 @@
 import DoublyLinkedList as dll
 
 
-def insertion_sort(data):
+def insertion_sort(data, comp_func):
     """
     >>> data1 = dll.DoublyLinkedList()
     >>> data1.insert(3)
@@ -10,7 +10,7 @@ def insertion_sort(data):
     >>> data1.insert(4)
     >>> data1.insert(2)
     >>> data1.insert(5)
-    >>> insertion_sort(data1)
+    >>> insertion_sort(data1, comp_func = lambda x, y: x < y)
     insertion sort
     5 2 4 6 1 3
     2 5 4 6 1 3
@@ -19,7 +19,7 @@ def insertion_sort(data):
     1 2 4 5 6 3
     1 2 3 4 5 6
     >>> data2 = [5,2,4,6,1,3]
-    >>> insertion_sort(data2)
+    >>> insertion_sort(data2, comp_func = lambda x, y: x < y)
     insertion sort
     [5, 2, 4, 6, 1, 3]
     [2, 5, 4, 6, 1, 3]
@@ -34,7 +34,7 @@ def insertion_sort(data):
         for i in range(1, len(data)):
             target = data[i]
             j = i - 1
-            while j >= 0 and data[j] > target:
+            while j >= 0 and comp_func(target, data[j]):
                 data[j+1] = data[j]
                 j -= 1
             data[j+1] = target
@@ -45,7 +45,7 @@ def insertion_sort(data):
         target = data.head.next.next
         while target is not data.tail:
             sorted = target.prev
-            while sorted is not data.head and sorted.x > target.x:
+            while sorted is not data.head and comp_func(target.x, sorted.x):
                 sorted = sorted.prev
             new_target = target.next  # 次のtargetはtargetの次．上書きされないように保持
             # ここから 挿入処理 sortedの後ろにtargetを挿入
@@ -60,7 +60,7 @@ def insertion_sort(data):
             data.show()
 
 
-def bubble_sort(data):
+def bubble_sort(data, comp_func):
     """
     >>> data1 = dll.DoublyLinkedList()
     >>> data1.insert(1)
@@ -68,14 +68,14 @@ def bubble_sort(data):
     >>> data1.insert(2)
     >>> data1.insert(3)
     >>> data1.insert(5)
-    >>> count = bubble_sort(data1)
+    >>> count = bubble_sort(data1, comp_func = lambda x, y: x < y)
     bubble sort
     >>> data1.show()
     1 2 3 4 5
     >>> print(count)
     8
     >>> data2 = [5,2,4,6,1,3]
-    >>> count = bubble_sort(data2)
+    >>> count = bubble_sort(data2, comp_func = lambda x, y: x < y)
     bubble sort
     >>> print(data2)
     [1, 2, 3, 4, 5, 6]
@@ -92,9 +92,10 @@ def bubble_sort(data):
             for j in range(len(data)-i):
                 j = len(data) - j - 1  # N-1 ~ i+1
                 if (
-                    type(data[j]) is str and data[j][1] < data[j-1][1]
+                    type(data[j]) is str and comp_func(
+                        data[j][1], data[j-1][1])
                 ) or (
-                    type(data[j]) is int and data[j] < data[j-1]
+                    type(data[j]) is int and comp_func(data[j], data[j-1])
                 ):
                     tmp = data[j]
                     data[j] = data[j-1]
@@ -110,7 +111,7 @@ def bubble_sort(data):
             flag = False
             target = data.tail.prev
             while target is not unsorted_top:
-                if target.prev.x > target.x:
+                if comp_func(target.x, target.prev.x):
                     unsorted_top_prev = unsorted_top.prev  # 上書き防止
                     # ここから 入替処理
                     tmp_prev = target.prev.prev
@@ -131,7 +132,7 @@ def bubble_sort(data):
     return count
 
 
-def selection_sort(data):
+def selection_sort(data, comp_func):
     """
     >>> data1 = dll.DoublyLinkedList()
     >>> data1.insert(3)
@@ -140,14 +141,14 @@ def selection_sort(data):
     >>> data1.insert(4)
     >>> data1.insert(6)
     >>> data1.insert(5)
-    >>> count = selection_sort(data1)
+    >>> count = selection_sort(data1, comp_func = lambda x, y: x < y)
     selection sort
     >>> data1.show()
     1 2 3 4 5 6
     >>> print(count)
     4
     >>> data2 = [5,6,4,2,1,3]
-    >>> count = selection_sort(data2)
+    >>> count = selection_sort(data2, comp_func = lambda x, y: x < y)
     selection sort
     >>> print(data2)
     [1, 2, 3, 4, 5, 6]
@@ -162,9 +163,10 @@ def selection_sort(data):
             minj = i
             for j in range(i, len(data)):
                 if (
-                    type(data[j]) is str and data[j][1] < data[minj][1]
+                    type(data[j]) is str and comp_func(
+                        data[j][1], data[minj][1])
                 ) or (
-                    type(data[j]) is int and data[j] < data[minj]
+                    type(data[j]) is int and comp_func(data[j], data[minj])
                 ):
                     minj = j
                     count_flag = True
@@ -181,7 +183,7 @@ def selection_sort(data):
             min = unsorted_top
             target = unsorted_top.next
             while target is not data.tail:
-                if target.x < min.x:
+                if comp_func(target.x, min.x):
                     min = target
                     count_flag = True
                 target = target.next
@@ -247,14 +249,14 @@ def stable_sort(data):
     print("stable sort")
     is_dll = type(data) is dll.DoubleDataDoublyLinkedList
     bubble = data.copy()
-    bubble_sort(bubble)
+    bubble_sort(bubble, comp_func=lambda x, y: x < y)
     if is_dll:
         bubble.show()
     else:
         print(bubble)
     print("Stable")  # Bubble sort is always stable
     selection = data.copy()
-    selection_sort(selection)
+    selection_sort(selection, comp_func=lambda x, y: x < y)
     if is_dll:
         selection.show()
     else:
