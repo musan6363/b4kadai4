@@ -127,10 +127,10 @@ class DoubleDataDoublyLinkedList(DoublyLinkedList):
 
     def copy(self):
         dll_copy = DoubleDataDoublyLinkedList()
-        original = self.head.next
-        while original is not self.tail:
+        original = self.tail.prev
+        while original is not self.head:
             dll_copy.insert(original.picture + str(original.x))
-            original = original.next
+            original = original.prev
         return dll_copy
 
 

@@ -242,27 +242,41 @@ def stable_sort(data):
     Stable
     selection sort
     ['D2', 'C3', 'S4', 'H4', 'C9']
-    Not Stable
+    Not stable
     """
     print("stable sort")
+    is_dll = type(data) is dll.DoubleDataDoublyLinkedList
     bubble = data.copy()
     bubble_sort(bubble)
-    if type(bubble) is dll.DoubleDataDoublyLinkedList:
-        data.show()
+    if is_dll:
         bubble.show()
     else:
         print(bubble)
     print("Stable")  # Bubble sort is always stable
     selection = data.copy()
     selection_sort(selection)
-    if type(selection) is dll.DoubleDataDoublyLinkedList:
+    if is_dll:
         selection.show()
     else:
         print(selection)
     if bubble == selection:
         print("Stable")
+    elif is_dll:
+        bubble_data = bubble.head.next
+        selection_data = selection.head.next
+        while bubble_data is not bubble.tail:
+            if (
+                bubble_data.x != selection_data.x
+                or
+                bubble_data.picture != selection_data.picture
+            ):
+                print("Not stable")
+                return
+            bubble_data = bubble_data.next
+            selection_data = selection_data.next
+        print("Stable")
     else:
-        print("Not Stable")
+        print("Not stable")
 
 
 if __name__ == "__main__":
