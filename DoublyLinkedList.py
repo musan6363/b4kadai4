@@ -74,6 +74,14 @@ class DoublyLinkedList:
         result = result[1:]
         print(result)
 
+    def copy(self):
+        dll_copy = DoublyLinkedList()
+        original = self.tail.prev
+        while original is not self.head:
+            dll_copy.insert(original.x)
+            original = original.prev
+        return dll_copy
+
 
 class DoubleDataDoublyLinkedList(DoublyLinkedList):
     """

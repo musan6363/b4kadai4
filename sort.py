@@ -10,27 +10,54 @@ def insertion_sort(data, comp_func):
     >>> data1.insert(4)
     >>> data1.insert(2)
     >>> data1.insert(5)
-    >>> insertion_sort(data1, comp_func = lambda x, y: x < y)
+    >>> ascending1 = data1.copy()
+    >>> insertion_sort(ascending1, comp_func = lambda x, y: x < y)
     insertion sort
-    5 2 4 6 1 3
-    2 5 4 6 1 3
-    2 4 5 6 1 3
-    2 4 5 6 1 3
-    1 2 4 5 6 3
+    >>> ascending1.show()
     1 2 3 4 5 6
-    >>> data2 = [5,2,4,6,1,3]
-    >>> insertion_sort(data2, comp_func = lambda x, y: x < y)
+    >>> descending1 = data1.copy()
+    >>> insertion_sort(descending1, comp_func = lambda x, y: x > y)
     insertion sort
-    [5, 2, 4, 6, 1, 3]
-    [2, 5, 4, 6, 1, 3]
-    [2, 4, 5, 6, 1, 3]
-    [2, 4, 5, 6, 1, 3]
-    [1, 2, 4, 5, 6, 3]
+    >>> descending1.show()
+    6 5 4 3 2 1
+    >>> odd_even1 = data1.copy()
+    >>> insertion_sort(odd_even1, comp_func = (
+            lambda x, y: (
+                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
+                    True if (x % 2 == 1 and y % 2 == 0) else False
+                )
+            )
+            )
+        )
+    insertion sort
+    >>> odd_even1.show()
+    1 3 5 2 4 6
+    >>> ascending2 = [5,2,4,6,1,3]
+    >>> insertion_sort(ascending2, comp_func = lambda x, y: x < y)
+    insertion sort
+    >>> print(ascending2)
     [1, 2, 3, 4, 5, 6]
+    >>> descending2 = [5,2,4,6,1,3]
+    >>> insertion_sort(descending2, comp_func = lambda x, y: x > y)
+    insertion sort
+    >>> print(descending2)
+    [6, 5, 4, 3, 2, 1]
+    >>> odd_even2 = [5,2,4,6,1,3]
+    >>> insertion_sort(odd_even2, comp_func = (
+            lambda x, y: (
+                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
+                    True if (x % 2 == 1 and y % 2 == 0) else False
+                )
+            )
+            )
+        )
+    insertion sort
+    >>> print(odd_even2)
+    [1, 3, 5, 2, 4, 6]
     """
     print("insertion sort")
     if type(data) is list:
-        print(data)
+        # print(data)
         for i in range(1, len(data)):
             target = data[i]
             j = i - 1
@@ -38,10 +65,10 @@ def insertion_sort(data, comp_func):
                 data[j+1] = data[j]
                 j -= 1
             data[j+1] = target
-            print(data)
+            # print(data)
 
     else:
-        data.show()
+        # data.show()
         target = data.head.next.next
         while target is not data.tail:
             sorted = target.prev
@@ -57,7 +84,7 @@ def insertion_sort(data, comp_func):
             sorted.next = target
             # ここまで 挿入処理
             target = new_target
-            data.show()
+            # data.show()
 
 
 def bubble_sort(data, comp_func):
@@ -68,19 +95,50 @@ def bubble_sort(data, comp_func):
     >>> data1.insert(2)
     >>> data1.insert(3)
     >>> data1.insert(5)
-    >>> count = bubble_sort(data1, comp_func = lambda x, y: x < y)
+    >>> ascending1 = data1.copy()
+    >>> count = bubble_sort(ascending1, comp_func = lambda x, y: x < y)
     bubble sort
-    >>> data1.show()
+    >>> ascending1.show()
     1 2 3 4 5
-    >>> print(count)
-    8
-    >>> data2 = [5,2,4,6,1,3]
-    >>> count = bubble_sort(data2, comp_func = lambda x, y: x < y)
+    >>> descending1 = data1.copy()
+    >>> count = bubble_sort(descending1, comp_func = lambda x, y: x > y)
     bubble sort
-    >>> print(data2)
+    >>> descending1.show()
+    5 4 3 2 1
+    >>> odd_even1 = data1.copy()
+    >>> count = bubble_sort(odd_even1, comp_func = (
+            lambda x, y: (
+                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
+                    True if (x % 2 == 1 and y % 2 == 0) else False
+                )
+            )
+            )
+        )
+    bubble sort
+    >>> odd_even1.show()
+    1 3 5 2 4
+    >>> ascending2 = [5,2,4,6,1,3]
+    >>> count = bubble_sort(ascending2, comp_func = lambda x, y: x < y)
+    bubble sort
+    >>> print(ascending2)
     [1, 2, 3, 4, 5, 6]
-    >>> print(count)
-    9
+    >>> descending2 = [5,2,4,6,1,3]
+    >>> bubble_sort(descending2, comp_func = lambda x, y: x > y)
+    bubble sort
+    >>> print(descending2)
+    [6, 5, 4, 3, 2, 1]
+    >>> odd_even2 = [5,2,4,6,1,3]
+    >>> bubble_sort(odd_even2, comp_func = (
+            lambda x, y: (
+                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
+                    True if (x % 2 == 1 and y % 2 == 0) else False
+                )
+            )
+            )
+        )
+    bubble sort
+    >>> print(odd_even2)
+    [1, 3, 5, 2, 4, 6]
     """
     print("bubble sort")
     if type(data) is list:
@@ -141,19 +199,50 @@ def selection_sort(data, comp_func):
     >>> data1.insert(4)
     >>> data1.insert(6)
     >>> data1.insert(5)
-    >>> count = selection_sort(data1, comp_func = lambda x, y: x < y)
+    >>> ascending1 = data1.copy()
+    >>> count = selection_sort(ascending1, comp_func = lambda x, y: x < y)
     selection sort
-    >>> data1.show()
+    >>> ascending1.show()
     1 2 3 4 5 6
-    >>> print(count)
-    4
-    >>> data2 = [5,6,4,2,1,3]
-    >>> count = selection_sort(data2, comp_func = lambda x, y: x < y)
+    >>> descending1 = data1.copy()
+    >>> count = selection_sort(descending1, comp_func = lambda x, y: x > y)
     selection sort
-    >>> print(data2)
+    >>> descending1.show()
+    5 4 3 2 1
+    >>> odd_even1 = data1.copy()
+    >>> count = selection_sort(odd_even1, comp_func = (
+            lambda x, y: (
+                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
+                    True if (x % 2 == 1 and y % 2 == 0) else False
+                )
+            )
+            )
+        )
+    selection sort
+    >>> odd_even1.show()
+    1 3 5 2 4
+    >>> ascending2 = [5,2,4,6,1,3]
+    >>> count = selection_sort(ascending2, comp_func = lambda x, y: x < y)
+    selection sort
+    >>> print(ascending2)
     [1, 2, 3, 4, 5, 6]
-    >>> print(count)
-    4
+    >>> descending2 = [5,2,4,6,1,3]
+    >>> selection_sort(descending2, comp_func = lambda x, y: x > y)
+    selection sort
+    >>> print(descending2)
+    [6, 5, 4, 3, 2, 1]
+    >>> odd_even2 = [5,2,4,6,1,3]
+    >>> selection_sort(odd_even2, comp_func = (
+            lambda x, y: (
+                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
+                    True if (x % 2 == 1 and y % 2 == 0) else False
+                )
+            )
+            )
+        )
+    selection sort
+    >>> print(odd_even2)
+    [1, 3, 5, 2, 4, 6]
     """
     print("selection sort")
     if type(data) is list:
