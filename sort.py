@@ -1,177 +1,191 @@
 import DoublyLinkedList as dll
 
 
-def insertion_sort(data, comp_func):
+def insert_list_to_dll(list, has_pic=None):
+    if has_pic:
+        new_dll = dll.DoubleDataDoublyLinkedList()
+    else:
+        new_dll = dll.DoublyLinkedList()
+    # dllは値が先頭に追加されていく．
+    # listの順番を守るために，末尾から追加していく．
+    for value in reversed(list):
+        new_dll.insert(value)
+    return new_dll
+
+
+def insertion_sort(sort_target, comp_func):
     """
-    >>> data1 = dll.DoublyLinkedList()
-    >>> data1.insert(3)
-    >>> data1.insert(1)
-    >>> data1.insert(6)
-    >>> data1.insert(4)
-    >>> data1.insert(2)
-    >>> data1.insert(5)
-    >>> ascending1 = data1.copy()
-    >>> insertion_sort(ascending1, comp_func = lambda x, y: x < y)
+    >>> sort_target_list = [5, 2, 4, 6, 1, 3]
+
+    >>> ascending_target_list   = sort_target_list.copy()
+    >>> descending_target_list  = sort_target_list.copy()
+    >>> odd_even_list           = sort_target_list.copy()
+
+    >>> insertion_sort(ascending_target_list, comp_func = lambda x, y: x > y)
     insertion sort
-    >>> ascending1.show()
-    1 2 3 4 5 6
-    >>> descending1 = data1.copy()
-    >>> insertion_sort(descending1, comp_func = lambda x, y: x > y)
-    insertion sort
-    >>> descending1.show()
-    6 5 4 3 2 1
-    >>> odd_even1 = data1.copy()
-    >>> insertion_sort(odd_even1, comp_func = (
-            lambda x, y: (
-                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
-                    True if (x % 2 == 1 and y % 2 == 0) else False
-                )
-            )
-            )
-        )
-    insertion sort
-    >>> odd_even1.show()
-    1 3 5 2 4 6
-    >>> ascending2 = [5,2,4,6,1,3]
-    >>> insertion_sort(ascending2, comp_func = lambda x, y: x < y)
-    insertion sort
-    >>> print(ascending2)
+    >>> print(ascending_target_list)
     [1, 2, 3, 4, 5, 6]
-    >>> descending2 = [5,2,4,6,1,3]
-    >>> insertion_sort(descending2, comp_func = lambda x, y: x > y)
+
+    >>> insertion_sort(descending_target_list, comp_func = lambda x, y: x < y)
     insertion sort
-    >>> print(descending2)
+    >>> print(descending_target_list)
     [6, 5, 4, 3, 2, 1]
-    >>> odd_even2 = [5,2,4,6,1,3]
-    >>> insertion_sort(odd_even2, comp_func = (
-            lambda x, y: (
-                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
-                    True if (x % 2 == 1 and y % 2 == 0) else False
-                )
-            )
-            )
-        )
+
+    >>> # 前の値(x)が大きい かつ 奇数<偶数が成り立っていない時
+    >>> # または 偶数<奇数のときTrueを返して入れ替える
+    >>> insertion_sort(odd_even_list, comp_func = lambda x, y: True if x > y and not(x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) else False)
     insertion sort
-    >>> print(odd_even2)
+    >>> print(odd_even_list)
     [1, 3, 5, 2, 4, 6]
+
+
+    >>> ascending_target_dll    = insert_list_to_dll(sort_target_list)
+    >>> descending_target_dll   = insert_list_to_dll(sort_target_list)
+    >>> odd_even_dll            = insert_list_to_dll(sort_target_list)
+
+    >>> insertion_sort(ascending_target_dll, comp_func = lambda x, y: x > y)
+    insertion sort
+    >>> ascending_target_dll.show()
+    1 2 3 4 5 6
+
+    >>> insertion_sort(descending_target_dll, comp_func = lambda x, y: x < y)
+    insertion sort
+    >>> descending_target_dll.show()
+    6 5 4 3 2 1
+
+    >>> # 前の値(x)が大きい かつ 奇数<偶数が成り立っていない時
+    >>> # または 偶数<奇数のときTrueを返して入れ替える
+    >>> insertion_sort(odd_even_dll, comp_func = lambda x, y: True if x > y and not(x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) else False)
+    insertion sort
+    >>> odd_even_dll.show()
+    1 3 5 2 4 6
     """
     print("insertion sort")
-    if type(data) is list:
-        # print(data)
-        for i in range(1, len(data)):
-            target = data[i]
-            j = i - 1
-            while j >= 0 and comp_func(target, data[j]):
-                data[j+1] = data[j]
-                j -= 1
-            data[j+1] = target
-            # print(data)
+    if type(sort_target) is list:
+        # "cp" は comparison_position．
+        # "tp" は target_position．
+        for cp in range(1, len(sort_target)):
+            comparison = sort_target[cp]
+            tp = cp - 1
+            while tp >= 0 and comp_func(sort_target[tp], comparison):
+                sort_target[tp+1] = sort_target[tp]
+                tp -= 1
+            sort_target[tp+1] = comparison
 
     else:
-        # data.show()
-        target = data.head.next.next
-        while target is not data.tail:
-            sorted = target.prev
-            while sorted is not data.head and comp_func(target.x, sorted.x):
+        ct = sort_target.head.next.next  # comparison_target
+        while ct is not sort_target.tail:
+            sorted = ct.prev
+            while (
+                sorted is not sort_target.head
+                and
+                comp_func(sorted.value, ct.value)
+            ):
                 sorted = sorted.prev
-            new_target = target.next  # 次のtargetはtargetの次．上書きされないように保持
-            # ここから 挿入処理 sortedの後ろにtargetを挿入
-            target.prev.next = target.next
-            target.next.prev = target.prev
-            target.next = sorted.next
-            target.prev = sorted
-            sorted.next.prev = target
-            sorted.next = target
-            # ここまで 挿入処理
-            target = new_target
-            # data.show()
+
+            # 次のcomparison_targetはcomparison_targetの次．上書きされないように保持
+            new_target = ct.next
+
+            # sortedの後ろにcomparison_targetを挿入
+            # 改善点: swap関数としてまとめたほうが良いかも．
+            ct.prev.next = ct.next
+            ct.next.prev = ct.prev
+            ct.next = sorted.next
+            ct.prev = sorted
+            sorted.next.prev = ct
+            sorted.next = ct
+
+            ct = new_target
 
 
-def bubble_sort(data, comp_func):
+def bubble_sort(sort_target, comp_func):
     """
-    >>> data1 = dll.DoublyLinkedList()
-    >>> data1.insert(1)
-    >>> data1.insert(4)
-    >>> data1.insert(2)
-    >>> data1.insert(3)
-    >>> data1.insert(5)
-    >>> ascending1 = data1.copy()
-    >>> count = bubble_sort(ascending1, comp_func = lambda x, y: x < y)
+    >>> sort_target_list = [5, 2, 4, 6, 1, 3]
+
+    >>> ascending_target_list   = sort_target_list.copy()
+    >>> descending_target_list  = sort_target_list.copy()
+    >>> odd_even_list           = sort_target_list.copy()
+
+    >>> bubble_sort(ascending_target_list, comp_func = lambda x, y: x > y)
     bubble sort
-    >>> ascending1.show()
-    1 2 3 4 5
-    >>> descending1 = data1.copy()
-    >>> count = bubble_sort(descending1, comp_func = lambda x, y: x > y)
-    bubble sort
-    >>> descending1.show()
-    5 4 3 2 1
-    >>> odd_even1 = data1.copy()
-    >>> count = bubble_sort(odd_even1, comp_func = (
-            lambda x, y: (
-                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
-                    True if (x % 2 == 1 and y % 2 == 0) else False
-                )
-            )
-            )
-        )
-    bubble sort
-    >>> odd_even1.show()
-    1 3 5 2 4
-    >>> ascending2 = [5,2,4,6,1,3]
-    >>> count = bubble_sort(ascending2, comp_func = lambda x, y: x < y)
-    bubble sort
-    >>> print(ascending2)
+    >>> print(ascending_target_list)
     [1, 2, 3, 4, 5, 6]
-    >>> descending2 = [5,2,4,6,1,3]
-    >>> bubble_sort(descending2, comp_func = lambda x, y: x > y)
+
+    >>> bubble_sort(descending_target_list, comp_func = lambda x, y: x < y)
     bubble sort
-    >>> print(descending2)
+    >>> print(descending_target_list)
     [6, 5, 4, 3, 2, 1]
-    >>> odd_even2 = [5,2,4,6,1,3]
-    >>> bubble_sort(odd_even2, comp_func = (
-            lambda x, y: (
-                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
-                    True if (x % 2 == 1 and y % 2 == 0) else False
-                )
-            )
-            )
-        )
+
+    >>> # 前の値(x)が大きい かつ 奇数<偶数が成り立っていない時
+    >>> # または 偶数<奇数のときTrueを返して入れ替える
+    >>> bubble_sort(odd_even_list, comp_func = lambda x, y: True if x > y and not(x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) else False)
     bubble sort
-    >>> print(odd_even2)
+    >>> print(odd_even_list)
     [1, 3, 5, 2, 4, 6]
+
+
+    >>> ascending_target_dll    = insert_list_to_dll(sort_target_list)
+    >>> descending_target_dll   = insert_list_to_dll(sort_target_list)
+    >>> odd_even_dll            = insert_list_to_dll(sort_target_list)
+
+    >>> bubble_sort(ascending_target_dll, comp_func = lambda x, y: x > y)
+    bubble sort
+    >>> ascending_target_dll.show()
+    1 2 3 4 5 6
+
+    >>> bubble_sort(descending_target_dll, comp_func = lambda x, y: x < y)
+    bubble sort
+    >>> descending_target_dll.show()
+    6 5 4 3 2 1
+
+    >>> # 前の値(x)が大きい かつ 奇数<偶数が成り立っていない時
+    >>> # または 偶数<奇数のときTrueを返して入れ替える
+    >>> bubble_sort(odd_even_dll, comp_func = lambda x, y: True if x > y and not(x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) else False)
+    bubble sort
+    >>> odd_even_dll.show()
+    1 3 5 2 4 6
     """
     print("bubble sort")
-    if type(data) is list:
-        count = 0
-        flag = True
-        i = 1
-        while flag:
-            flag = False
-            for j in range(len(data)-i):
-                j = len(data) - j - 1  # N-1 ~ i+1
+    if type(sort_target) is list:
+        # replace_count = 0
+        exist_unsorted_pair = True
+        unsorted_top_position = 1
+        has_picture = type(sort_target[0]) is str
+
+        while exist_unsorted_pair:
+            exist_unsorted_pair = False
+            # "tp" は target_position
+            for tp in range(len(sort_target)-unsorted_top_position):
+                tp = len(sort_target) - tp - 1  # N-1 ~ unsorted_top_position+1
                 if (
-                    type(data[j]) is str and comp_func(
-                        data[j][1], data[j-1][1])
+                    has_picture and comp_func(
+                        sort_target[tp-1][1], sort_target[tp][1])
                 ) or (
-                    type(data[j]) is int and comp_func(data[j], data[j-1])
+                    not has_picture and comp_func(
+                        sort_target[tp-1], sort_target[tp])
                 ):
-                    tmp = data[j]
-                    data[j] = data[j-1]
-                    data[j-1] = tmp
-                    flag = True
-                    count += 1
-            i += 1
+                    tmp = sort_target[tp]
+                    sort_target[tp] = sort_target[tp-1]
+                    sort_target[tp-1] = tmp
+                    exist_unsorted_pair = True
+                    # replace_count += 1
+            unsorted_top_position += 1
     else:
-        count = 0
-        flag = True
-        unsorted_top = data.head.next
-        while flag:
-            flag = False
-            target = data.tail.prev
+        # replace_count = 0
+        exist_unsorted_pair = True
+        unsorted_top = sort_target.head.next
+
+        while exist_unsorted_pair:
+            exist_unsorted_pair = False
+            target = sort_target.tail.prev
             while target is not unsorted_top:
-                if comp_func(target.x, target.prev.x):
-                    unsorted_top_prev = unsorted_top.prev  # 上書き防止
-                    # ここから 入替処理
+                if comp_func(target.prev.value, target.value):
+                    # 未ソート部の先頭が上書きされないようにする
+                    unsorted_top_prev = unsorted_top.prev
+
+                    # a(tmp_prev) - b(tmp_next) - c(target) - d  を
+                    # a           - c           - b         - d  に入れ替える
+                    # 改善点: swap関数としてまとめたほうが良いかも．
                     tmp_prev = target.prev.prev
                     tmp_next = target.prev
                     target.prev.prev.next = target
@@ -180,103 +194,104 @@ def bubble_sort(data, comp_func):
                     target.next.prev = target.prev
                     target.prev = tmp_prev
                     target.next = tmp_next
-                    # ここまで 入替処理
+
                     unsorted_top = unsorted_top_prev.next
-                    flag = True
-                    count += 1
+
+                    exist_unsorted_pair = True
+                    # replace_count += 1
                 else:
                     target = target.prev
             unsorted_top = unsorted_top.next
-    return count
+    # return replace_count
 
 
-def selection_sort(data, comp_func):
+def selection_sort(sort_target, comp_func):
     """
-    >>> data1 = dll.DoublyLinkedList()
-    >>> data1.insert(3)
-    >>> data1.insert(1)
-    >>> data1.insert(2)
-    >>> data1.insert(4)
-    >>> data1.insert(6)
-    >>> data1.insert(5)
-    >>> ascending1 = data1.copy()
-    >>> count = selection_sort(ascending1, comp_func = lambda x, y: x < y)
+    >>> sort_target_list = [5, 2, 4, 6, 1, 3]
+
+    >>> ascending_target_list   = sort_target_list.copy()
+    >>> descending_target_list  = sort_target_list.copy()
+    >>> odd_even_list           = sort_target_list.copy()
+
+    >>> selection_sort(ascending_target_list, comp_func = lambda x, y: x > y)
     selection sort
-    >>> ascending1.show()
-    1 2 3 4 5 6
-    >>> descending1 = data1.copy()
-    >>> count = selection_sort(descending1, comp_func = lambda x, y: x > y)
-    selection sort
-    >>> descending1.show()
-    5 4 3 2 1
-    >>> odd_even1 = data1.copy()
-    >>> count = selection_sort(odd_even1, comp_func = (
-            lambda x, y: (
-                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
-                    True if (x % 2 == 1 and y % 2 == 0) else False
-                )
-            )
-            )
-        )
-    selection sort
-    >>> odd_even1.show()
-    1 3 5 2 4
-    >>> ascending2 = [5,2,4,6,1,3]
-    >>> count = selection_sort(ascending2, comp_func = lambda x, y: x < y)
-    selection sort
-    >>> print(ascending2)
+    >>> print(ascending_target_list)
     [1, 2, 3, 4, 5, 6]
-    >>> descending2 = [5,2,4,6,1,3]
-    >>> selection_sort(descending2, comp_func = lambda x, y: x > y)
+
+    >>> selection_sort(descending_target_list, comp_func = lambda x, y: x < y)
     selection sort
-    >>> print(descending2)
+    >>> print(descending_target_list)
     [6, 5, 4, 3, 2, 1]
-    >>> odd_even2 = [5,2,4,6,1,3]
-    >>> selection_sort(odd_even2, comp_func = (
-            lambda x, y: (
-                True if (x < y and not(x % 2 == 0 and y % 2 == 1)) else (
-                    True if (x % 2 == 1 and y % 2 == 0) else False
-                )
-            )
-            )
-        )
+
+    >>> # 前の値(x)が大きい かつ 奇数<偶数が成り立っていない時
+    >>> # または 偶数<奇数のときTrueを返して入れ替える
+    >>> selection_sort(odd_even_list, comp_func = lambda x, y: True if x > y and not(x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) else False)
     selection sort
-    >>> print(odd_even2)
+    >>> print(odd_even_list)
     [1, 3, 5, 2, 4, 6]
+
+
+    >>> ascending_target_dll    = insert_list_to_dll(sort_target_list)
+    >>> descending_target_dll   = insert_list_to_dll(sort_target_list)
+    >>> odd_even_dll            = insert_list_to_dll(sort_target_list)
+
+    >>> selection_sort(ascending_target_dll, comp_func = lambda x, y: x > y)
+    selection sort
+    >>> ascending_target_dll.show()
+    1 2 3 4 5 6
+
+    >>> selection_sort(descending_target_dll, comp_func = lambda x, y: x < y)
+    selection sort
+    >>> descending_target_dll.show()
+    6 5 4 3 2 1
+
+    >>> # 前の値(x)が大きい かつ 奇数<偶数が成り立っていない時
+    >>> # または 偶数<奇数のときTrueを返して入れ替える
+    >>> selection_sort(odd_even_dll, comp_func = lambda x, y: True if x > y and not(x % 2 == 1 and y % 2 == 0) or (x % 2 == 0 and y % 2 == 1) else False)
+    selection sort
+    >>> odd_even_dll.show()
+    1 3 5 2 4 6
     """
     print("selection sort")
-    if type(data) is list:
-        count = 0
-        for i in range(len(data)):
-            count_flag = False
-            minj = i
-            for j in range(i, len(data)):
+    if type(sort_target) is list:
+        # replace_count = 0
+        has_picture = type(sort_target[0]) is str
+        for unsorted_top_position in range(len(sort_target)):
+            # count_flag = False
+            tmp_min = unsorted_top_position
+            for i in range(unsorted_top_position, len(sort_target)):
                 if (
-                    type(data[j]) is str and comp_func(
-                        data[j][1], data[minj][1])
+                    has_picture and comp_func(
+                        sort_target[tmp_min][1], sort_target[i][1])
                 ) or (
-                    type(data[j]) is int and comp_func(data[j], data[minj])
+                    not has_picture and comp_func(
+                        sort_target[tmp_min], sort_target[i])
                 ):
-                    minj = j
-                    count_flag = True
-            tmp = data[i]
-            data[i] = data[minj]
-            data[minj] = tmp
-            if count_flag:
-                count += 1
+                    tmp_min = i
+                    # count_flag = True
+
+            tmp = sort_target[unsorted_top_position]
+            sort_target[unsorted_top_position] = sort_target[tmp_min]
+            sort_target[tmp_min] = tmp
+
+            # if count_flag:
+            # replace_count += 1
     else:
-        count = 0
-        unsorted_top = data.head.next
-        while unsorted_top is not data.tail:
-            count_flag = False
+        # replace_count = 0
+        unsorted_top = sort_target.head.next
+        while unsorted_top is not sort_target.tail:
+            # count_flag = False
             min = unsorted_top
             target = unsorted_top.next
-            while target is not data.tail:
-                if comp_func(target.x, min.x):
+            while target is not sort_target.tail:
+                if comp_func(min.value, target.value):
                     min = target
-                    count_flag = True
+                    # count_flag = True
                 target = target.next
-            # ここから minとunsorted_topの交換
+
+            # a(unsorted_top) - b - c(tmp_prev) - d(min) - e(tmp_next)  を
+            # d(unsorted_top) - b - c           - a      - e            にする
+            # 改善点: swap関数としてまとめたほうが良いかも．
             tmp_prev = min.prev
             tmp_next = min.next
             unsorted_top.prev.next = min
@@ -287,46 +302,26 @@ def selection_sort(data, comp_func):
             tmp_next.prev = unsorted_top
             unsorted_top.prev = tmp_prev
             unsorted_top.next = tmp_next
+
+            # minとunsorted_topが隣り合っていたときの対策
+            # min.nextがmin自身，unsorted_top.prevも自身を指している．
             if min.next is min:
-                # minとunsorted_topが隣り合っていたときの対策
                 min.next = unsorted_top
                 unsorted_top.prev = min
-            # ここまで minとunsorted_topの交換
+
             unsorted_top = min.next
-            if count_flag:
-                count += 1
-    return count
+            # if count_flag:
+            # replace_count += 1
+            # return replace_count
 
 
-def stable_sort(data):
+def stable_sort(sort_target):
     """
-    >>> data1 = dll.DoubleDataDoublyLinkedList()
-    >>> data1.insert("C3")
-    >>> data1.insert("D2")
-    >>> data1.insert("S4")
-    >>> data1.insert("C9")
-    >>> data1.insert("H4")
-    >>> stable_sort(data1)
-    stable sort
-    bubble sort
-    D2 C3 H4 S4 C9
-    Stable
-    selection sort
-    D2 C3 S4 H4 C9
-    Not stable
-    >>> data2 = dll.DoubleDataDoublyLinkedList()
-    >>> data2.insert("H1")
-    >>> data2.insert("S1")
-    >>> stable_sort(data2)
-    stable sort
-    bubble sort
-    S1 H1
-    Stable
-    selection sort
-    S1 H1
-    Stable
-    >>> data3 = ['H4', 'C9', 'S4', 'D2', 'C3']
-    >>> stable_sort(data3)
+    >>> # データの準備 listはミュータブルでソート関数を通すと上書きされる．
+    >>> # 先にdllにも同じリストをコピーしておく．
+    >>> sort_target_list = ['H4', 'C9', 'S4', 'D2', 'C3']
+    >>> sort_target_dll = insert_list_to_dll(sort_target_list, has_pic=True)
+    >>> stable_sort(sort_target_list)
     stable sort
     bubble sort
     ['D2', 'C3', 'H4', 'S4', 'C9']
@@ -334,37 +329,51 @@ def stable_sort(data):
     selection sort
     ['D2', 'C3', 'S4', 'H4', 'C9']
     Not stable
+    >>> stable_sort(sort_target_dll)
+    stable sort
+    bubble sort
+    D2 C3 H4 S4 C9
+    Stable
+    selection sort
+    D2 C3 S4 H4 C9
+    Not stable
     """
     print("stable sort")
-    is_dll = type(data) is dll.DoubleDataDoublyLinkedList
-    bubble = data.copy()
-    bubble_sort(bubble, comp_func=lambda x, y: x < y)
-    if is_dll:
-        bubble.show()
+    is_dddll = type(sort_target) is dll.DoubleDataDoublyLinkedList
+
+    bubble_sort_target = sort_target.copy()
+    bubble_sort(bubble_sort_target, comp_func=lambda x, y: x > y)
+    if is_dddll:
+        bubble_sort_target.show()
     else:
-        print(bubble)
+        print(bubble_sort_target)
+
     print("Stable")  # Bubble sort is always stable
-    selection = data.copy()
-    selection_sort(selection, comp_func=lambda x, y: x < y)
-    if is_dll:
-        selection.show()
+
+    selection_sort_target = sort_target.copy()
+    selection_sort(selection_sort_target, comp_func=lambda x, y: x > y)
+
+    if is_dddll:
+        selection_sort_target.show()
     else:
-        print(selection)
-    if bubble == selection:
-        print("Stable")
-    elif is_dll:
-        bubble_data = bubble.head.next
-        selection_data = selection.head.next
-        while bubble_data is not bubble.tail:
+        print(selection_sort_target)
+
+    if is_dddll:
+        # bubble sort と selection sortの結果をheadから順に比較
+        bubble_item = bubble_sort_target.head.next
+        selection_item = selection_sort_target.head.next
+        while bubble_item is not bubble_sort_target.tail:
             if (
-                bubble_data.x != selection_data.x
+                bubble_item.value != selection_item.value
                 or
-                bubble_data.picture != selection_data.picture
+                bubble_item.picture != selection_item.picture
             ):
                 print("Not stable")
                 return
-            bubble_data = bubble_data.next
-            selection_data = selection_data.next
+            bubble_item = bubble_item.next
+            selection_item = selection_item.next
+        print("Stable")
+    elif bubble_sort_target == selection_sort_target:
         print("Stable")
     else:
         print("Not stable")
