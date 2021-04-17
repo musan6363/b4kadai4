@@ -6,6 +6,10 @@ class AbstractSort:
         raise NotImplementedError
 
 
+def get_sort_instance(algorithm_name):
+    return eval(algorithm_name+'Sort')()
+
+
 def insert_list_to_dll(list, has_pic=None):
     if has_pic:
         new_dll = dll.DoubleDataDoublyLinkedList()
@@ -189,14 +193,14 @@ class SelectionSort(AbstractSort):
 def test():
     """
     >>> values = [3, 1, 2, 5, 4, 6]
-    >>> _c = BubbleSort()
+    >>> _c = get_sort_instance('Bubble')
     >>> _c.sort(values, comp_func = lambda x, y: x > y)
     bubble sort
     >>> print(values)
     [1, 2, 3, 4, 5, 6]
 
     >>> values = [3, 1, 2, 5, 4, 6]
-    >>> _c = InsertionSort()
+    >>> _c = get_sort_instance('Insertion')
     >>> _c.sort(values, comp_func = lambda x, y: x > y)
     insertion sort
     >>> print(values)
